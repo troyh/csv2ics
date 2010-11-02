@@ -1,0 +1,38 @@
+#!/usr/bin/php
+<?php
+date_default_timezone_set('America/Los_Angeles');
+$fh=fopen("php://stdin","r");
+if ($fh) {
+	$bFirstRow=true;
+	while (is_array($cols=fgetcsv($fh,0,"\t"))) {
+		// Skip 1st row
+		if ($bFirstRow) {
+			$bFirstRow=false;
+			continue;
+		}
+		// print_r($cols);print "\n";
+		// $uid=create_uuid();
+?>
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:<?=$uid?>
+
+DTSTAMP:<?=date('Ymd\THis\Z')?>
+
+ORGANIZER;CN=Troy Hakala:MAILTO:troy.hakala@gmail.com
+DTSTART:<?=date('Ymd\THis\Z',strtotime($cols[4]))?>
+
+DTEND:<?=date('Ymd\THis\Z',strtotime($cols[5]))?>
+
+SUMMARY:<?=$cols[2]?>
+
+END:VEVENT
+END:VCALENDAR
+		
+<?php
+	}
+	fclose($fh);
+}
+?>
